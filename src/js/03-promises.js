@@ -6,3 +6,10 @@ function createPromise(position, delay) {
     // Reject
   }
 }
+
+const promise = new Promise((resolve, reject) => {
+  const canFulFill = Math.random() > 0.5;
+  if (canFulFill) {
+  }
+});
+console.log(promise);
