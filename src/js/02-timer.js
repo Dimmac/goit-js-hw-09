@@ -11,26 +11,28 @@ const refs = {
   dataMinutes: document.querySelector('[data-minutes]'),
   dataSeconds: document.querySelector('[data-seconds]'),
 };
+
+let STEP = 1000;
 let intervalId = null;
 let selectedTime = null;
+refs.dataStartBtn.disabled = true;
 
 refs.dataStartBtn.addEventListener('click', () => {
   startTimer();
 });
 
 function startTimer() {
-  // refs.dataStartBtn.disabled = true;
   refs.datetimePicker.disabled = true;
   intervalId = setInterval(() => {
     const currentTime = Date.now();
     const deltaTime = selectedTime - currentTime;
     const time = convertMs(deltaTime);
     updateTime(time);
-    if (deltaTime < 1000) {
+    if (deltaTime < STEP) {
       clearInterval(intervalId);
     }
     updateTime(time);
-  }, 1000);
+  }, STEP);
 }
 
 const options = {
@@ -38,11 +40,10 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
+
   onClose(selectedDates) {
     if (selectedDates[0].getTime() < Date.now()) {
-      refs.dataStartBtn.disabled = true;
-      // window.alert('Please choose a date in the future');
-      Notify.failure('Please choose  a date in the future');
+      Notify.failure('Please choose a date in the future');
     } else {
       refs.dataStartBtn.disabled = false;
       selectedTime = selectedDates[0].getTime();
@@ -77,6 +78,7 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
+
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
 }
